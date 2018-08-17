@@ -34,38 +34,50 @@ while True:
                 print("3: Exit Application")
                 op1 = int(input("Enter your option: "))
 
+                if op1 == 1:
+                    op2 = 2
+                    while True:
+                        index = int(input("Enter index of the file to view duplicates: "))
+                        dups.display_file_dups(index)
+                        while True:
+                            print("Select Option:")
+                            print("1: Delete a file")
+                            print("2: View the file")
+                            print("3: Select another file")
+                            print("4: Go to Main Menu")
+                            print("5: Exit Application")
+                            op2 = int(input("Enter your option: "))
+
+                            if op2 == 5:
+                                exit_app()
+                            elif op2 == 4 or op2 == 3:
+                                break
+                            elif op2 == 1:
+                                print("delete file")
+                            #    dups.delete_file(index)
+                            #    dups.display_file_dups(index)
+                            elif op2 == 2:
+                                print("view file")
+                             #   dups.view_file(index)
+
+                        if op2 == 4:
+                            op1 = 2
+                            break
+
                 if op1 == 3:
                     exit_app()
-                elif op1 == 2:
+                if op1 == 2:
                     print("Loading Main Menu")
                     break
-                elif op1 == 1:
-                    op2 = 2
-                    index = int(input("Enter index of the file to view duplicates: "))
-                    dups.display_file_dups(index)
-                    while True:
-                        print("Select Option:")
-                        print("1: Delete a file")
-                        print("2: View the file")
-                        print("3: Select another file")
-                        print("4: Go to Main Menu")
-                        print("5: Exit Application")
-                        op2 = int(input("Enter your option: "))
-
-                        if op2 == 5:
-                            exit_app()
-                        elif op2 == 4:
-                            break
-                        elif op2 == 3:
-                            continue
-                        elif op2 == 1:
-                            dups.delete_file(index)
-                            dups.display_file_dups(index)
-                        elif op2 == 2:
-                            dups.view_file(index)
-                    if op2 == 4:
-                        print("Loading Main Menu")
-                        break
 
     elif option == 2:
         print("Select a file")
+        application_window = tk.Tk()
+        filename = filedialog.askopenfilename(parent=application_window,
+                                            initialdir=os.getcwd(),
+                                            title="Please select a file:")
+        application_window.destroy()
+
+        print(filename)
+        dups = dd.DupsFile(filename)
+        dups.view_dups()

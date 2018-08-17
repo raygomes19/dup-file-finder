@@ -1,6 +1,6 @@
 from classes import Files
 import os, glob, hashlib
-import webbrowser
+import webbrowser, itertools
 
 def chunk_reader(fobj, chunk_size=1024):
     """Generator that reads a file in chunks of bytes"""
@@ -15,6 +15,41 @@ def calfullhash(fullpath):
     for chunk in chunk_reader(open(fullpath, 'rb')):
         hashobj.update(chunk)
     return hashobj.hexdigest()
+
+def gethash(hashobj, chunk):
+    hashobj.update(chunk)
+    return hashobj.hexdigest()
+
+def file_compare(file1, file2):
+    file1_hash = hashlib.sha1()
+    file2_hash = hashlib.sha1()
+    for (chunk1, chunk2) in itertools.zip_longest(chunk_reader(open(file1, "rb")), chunk_reader(open(file2, "rb"))):
+        if gethash(file1_hash, chunk1) != gethash(file2_hash, chunk2):
+            return False
+    return True
+
+class DupsFile:
+    def __init__(self, path):
+        self.path = path
+        self.dirname = "~"
+
+    def find_dups(self):
+        self.dirname = '/home/aspera/Documents/DataMining'
+        matches = []
+        for dirp, dirn, files in os.walk(self.dirname):
+            for fname in files:
+                fullpath = os.path.join(dirp, fname)
+                print(fullpath)
+                if file_compare(self.path, fullpath):
+                    matches.append(fullpath)
+        return matches
+
+    def view_dups(self):
+        dups = self.find_dups()
+        print(dups)
+        for i, x in enumerate(dups):
+            print(i + 1, x)
+
 
 class DupsDir:
     def __init__(self, path):
@@ -82,7 +117,7 @@ class DupsDir:
             if loop == "n" or loop == "N":
                 break
 
-    def delete_file(self, li, index):
+    def delete_file(self, index):
         val = self.view_file_dups(index)
         loop = "y"
         while loop != 'n' or loop != 'N':
@@ -95,6 +130,8 @@ class DupsDir:
             self.update_duplicates(index, val)
             print("Press n/N to exit, any other key to select other files")
             loop = input()
+
+
 
 
 
