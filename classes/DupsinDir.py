@@ -34,8 +34,9 @@ class DupsFile:
         self.dirname = "~"
 
     def find_dups(self):
-        self.dirname = '/home/aspera/Documents/DataMining'
         matches = []
+        self.dirname = "/home/aspera/Documents/DataMining/"
+        print("Searching in directory... ", self.dirname)
         for dirp, dirn, files in os.walk(self.dirname):
             for fname in files:
                 fullpath = os.path.join(dirp, fname)
@@ -45,9 +46,28 @@ class DupsFile:
         return matches
 
     def view_dups(self):
-        dups = self.find_dups()
-        print(dups)
-        for i, x in enumerate(dups):
+        self.dups = self.find_dups()
+        print(self.dups)
+        if self.dups:
+            print("Search completed. Duplicates found!")
+            print("Index \t Duplicate File Location")
+            for i, x in enumerate(self.dups):
+                print(i + 1, x)
+        else:
+            print("No duplicates found!")
+            return 0
+
+    def view_file(self, index):
+        print("Opening file...")
+        webbrowser.open_new(self.dups[index - 1])
+
+    def delete_file(self, index):
+        print("Deleting file...")
+        os.remove(self.dups[index - 1])
+        print(self.dups[index - 1], "deleted.")
+        del self.dups[index - 1]
+        print("Index \t Duplicate File Location")
+        for i, x in enumerate(self.dups):
             print(i + 1, x)
 
 
@@ -61,6 +81,7 @@ class DupsDir:
         for dirp, dirn, files in os.walk(self.path):
             for fname in files:
                 fullpath = os.path.join(dirp, fname)
+                print(fullpath)
                 hashvalue = calfullhash(fullpath)
                 if hashvalue in matches:
                     if fullpath not in matches[hashvalue]:

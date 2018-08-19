@@ -23,7 +23,7 @@ while True:
         dirname = filedialog.askdirectory(parent=application_window,
                                      initialdir=os.getcwd(),
                                      title="Please select a folder to search")
-        application_window.quit()
+        application_window.destroy()
 
         dups = dd.DupsDir(dirname)
         if dups.display_dups():
@@ -71,13 +71,43 @@ while True:
                     break
 
     elif option == 2:
-        print("Select a file")
-        application_window = tk.Tk()
-        filename = filedialog.askopenfilename(parent=application_window,
-                                            initialdir=os.getcwd(),
-                                            title="Please select a file:")
-        application_window.destroy()
+        while True:
+            print("Select a file")
+            application_window = tk.Tk()
+            filename = filedialog.askopenfilename(parent=application_window,
+                                                initialdir=os.getcwd(),
+                                                title="Please select a file:")
+            application_window.destroy()
 
-        print(filename)
-        dups = dd.DupsFile(filename)
-        dups.view_dups()
+            print("Selected file", filename)
+            dups = dd.DupsFile(filename)
+            x = dups.view_dups()
+            op1 = 4
+            if x == 0:
+                break
+            while True:
+                print("Select Option: ")
+                print("1. View a particular duplicate")
+                print("2. Delete a particular duplicate")
+                print("3. Select another file")
+                print("4. Go to Main Menu")
+                print("5. Exit Application")
+                op1 = int(input("Enter an option: "))
+
+                if op1 == 5:
+                    exit_app()
+                elif op1 == 3:
+                    break
+                elif op1 == 1:
+                    index = int(input("Enter index of the file: "))
+                    dups.view_file(index)
+                elif op1 == 2:
+                    index = int(input("Enter index of the file: "))
+                    dups.delete_file(index)
+                elif op1 == 4:
+                    break
+
+            if op1 == 4:
+                print("Loading Main Menu")
+                break
+
