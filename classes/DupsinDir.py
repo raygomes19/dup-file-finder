@@ -35,7 +35,6 @@ class DupsFile:
 
     def find_dups(self):
         matches = []
-        self.dirname = "/home/aspera/Documents/DataMining/"
         print("Searching in directory... ", self.dirname)
         for dirp, dirn, files in os.walk(self.dirname):
             for fname in files:
